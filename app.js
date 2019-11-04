@@ -3,11 +3,13 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
-
+const indexRouter = require('./routes/index');
 const recordingRouter = require('./routes/recordings');
 
 const app = express();
 
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -21,13 +23,14 @@ app.use(function (req, res, next) {
 });
 
 app.use(logger('dev'));
-app.use('/audio', express.static('audio'))
+app.use('/audio', express.static('audio'));
+app.use('/view', express.static('view'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+app.use('/', indexRouter);
 app.use('/recording', recordingRouter);
 
 // catch 404 and forward to error handler
