@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const recordingModel = require('../models/recording');
-const token = require('../token_code');
+//const token = require('../token_code');
 const connection = require('../data/db');
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -16,7 +16,7 @@ const upload = multer({ storage: storage })
 
 router.post('/addRecording', upload.single('audioFile'), function (req, res, next) {
   console.log(req.file)
-  if (req.body.token !== token) {
+  if (req.body.token !== token_code) {
     return res.status(401).json({
       message: 'Access Denied'
     });
