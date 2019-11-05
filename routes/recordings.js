@@ -21,8 +21,10 @@ router.post('/addRecording', upload.single('audioFile'), function (req, res, nex
       message: 'Access Denied'
     });
   } else {
+    console.log('1st check-point');
     recordingModel.find({ title: req.body.title })
       .exec()
+      console.log('2nd check-point')
       .then(recording => {
         if (recording.length >= 1) {
           return res.status(409).json({
