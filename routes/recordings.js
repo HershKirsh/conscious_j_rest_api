@@ -14,11 +14,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage })
 
-router.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
-});
-
 router.post('/addRecording', upload.single('audioFile'), function (req, res, next) {
   console.log(req.file)
   if (req.body.token !== process.env.token_code) {
@@ -39,7 +34,8 @@ router.post('/addRecording', upload.single('audioFile'), function (req, res, nex
             series: req.body.series,
             title: req.body.title,
             audioLink: req.file.path,
-            ytLink: req.body.ytLink
+            ytLink: req.body.ytLink,
+            number: req.body.number
           });
           newRecording
             .save()

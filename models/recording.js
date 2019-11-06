@@ -17,6 +17,10 @@ var RecordingSchema = new Schema({
     ytLink: {
         type: String,
         required: true
+    },
+    number: {
+        type: Number,
+        required: true
     }
 })
 
