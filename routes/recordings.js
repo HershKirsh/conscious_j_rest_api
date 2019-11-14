@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const recordingModel = require('../models/recording');
-//const token = require('../token_code');
 const connection = require('../data/db');
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -14,7 +13,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage })
 
-router.post('/addRecording', upload.single('audioFile'), function (req, res, next) {
+router.post('/', upload.single('audioFile'), function (req, res, next) {
   console.log(req.file)
   if (req.body.token !== process.env.token_code) {
     return res.status(401).json({
@@ -57,7 +56,7 @@ router.post('/addRecording', upload.single('audioFile'), function (req, res, nex
   }
 });
 
-router.get('/recordings', function (req, res) {
+router.get('/', function (req, res) {
   recordingModel.find({}, function (err, data) {
     if (err) {
       console.log(err);
@@ -66,6 +65,10 @@ router.get('/recordings', function (req, res) {
     var personModel = JSON.stringify(data);
     res.send(personModel);
   });
+});
+
+router.get('/download/:audioFile', function (req, res) {
+  res.download(audioFile);
 });
 
 module.exports = router;
