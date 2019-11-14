@@ -69,8 +69,8 @@ router.get('/', function (req, res) {
 
 router.get('/download', function (req, res) {
   console.log('ENTERED DOWNLOADS!!!');
-  console.log(__dirname + req.query.path);
-  let file = __dirname + req.query.path;
+  console.log(req.query.path);
+  let file = req.query.path;
   res.download(file);
 });
 
