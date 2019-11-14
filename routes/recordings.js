@@ -67,8 +67,11 @@ router.get('/', function (req, res) {
   });
 });
 
-router.get('/download/:audioFile', function (req, res) {
-  res.download(audioFile);
+router.get('/download', function (req, res) {
+  console.log('ENTERED DOWNLOADS!!!');
+  console.log(__dirname + req.query.path);
+  let file = __dirname + req.query.path;
+  res.download(file);
 });
 
 module.exports = router;
