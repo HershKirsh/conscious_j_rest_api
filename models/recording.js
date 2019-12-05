@@ -21,6 +21,10 @@ var RecordingSchema = new Schema({
     number: {
         type: Number,
         required: true
+    },
+    date: {
+        type: Date,
+        required: true
     }
 })
 

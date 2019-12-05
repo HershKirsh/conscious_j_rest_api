@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const recordingModel = require('../models/recording');
 const connection = require('../data/db');
-const multer = require('multer')
+const spawn = require('child_process').spawn;
+const multer = require('multer');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './audio');
@@ -12,6 +13,7 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage: storage })
+
 
 router.post('/', upload.single('audioFile'), function (req, res, next) {
   console.log(req.file)
@@ -68,9 +70,11 @@ router.get('/', function (req, res) {
 });
 
 router.get('/download', function (req, res) {
-  console.log('ENTERED DOWNLOADS!!!');
-  console.log(req.query.path);
+  console.log('ENTERED');
   let file = req.query.path;
+  // let bitrate = '54K';
+  // let convert = spawn('ffmpeg', ['-i', file, '-b:a', bitrate, 'out.mp3'])
+  // res.download(convert);
   res.download(file);
 });
 
