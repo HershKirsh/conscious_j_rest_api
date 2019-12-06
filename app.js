@@ -3,8 +3,6 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
-const m3u8stream = require('m3u8stream');
-const parseTime = require('m3u8stream/dist/parse-time');
 
 const indexRouter = require('./routes/index');
 const recordingRouter = require('./routes/recordings');

@@ -1,8 +1,6 @@
 const https = require('https');
 const recordingModel = require('./models/recording');
 const connection = require('./data/db');
-const m3u8stream = require('m3u8stream');
-const parseTime = require('m3u8stream/dist/parse-time');
 const YoutubeMp3Downloader = require("youtube-mp3-downloader");
 const YD = new YoutubeMp3Downloader({
     "ffmpegPath": "ffmpeg",
