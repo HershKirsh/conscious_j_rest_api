@@ -4,7 +4,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 
-
 const indexRouter = require('./routes/index');
 const recordingRouter = require('./routes/recordings');
 
