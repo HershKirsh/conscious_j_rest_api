@@ -10,11 +10,7 @@ var RecordingSchema = new Schema({
         type: String,
         required: true,
     },
-    audioLink: {
-        type: String,
-        required: true
-    },
-    ytLink: {
+    ytId: {
         type: String,
         required: true
     },
