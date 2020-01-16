@@ -1,8 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const https = require('https');
 const recordingModel = require('../models/recording');
 const connection = require('../data/db');
-const spawn = require('child_process').spawn;
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: 'us-east-2'
+});
+//const spawn = require('child_process').spawn;
 const multer = require('multer');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -64,18 +71,9 @@ router.get('/', function (req, res) {
       console.log(err);
       return res.status(401);
     }
-    var personModel = JSON.stringify(data);
-    res.send(personModel);
+    var docs = JSON.stringify(data);
+    res.send(docs);
   });
-});
-
-router.get('/download', function (req, res) {
-  console.log('ENTERED');
-  let file = req.query.path;
-  // let bitrate = '54K';
-  // let convert = spawn('ffmpeg', ['-i', file, '-b:a', bitrate, 'out.mp3'])
-  // res.download(convert);
-  res.download(file);
 });
 
 module.exports = router;
