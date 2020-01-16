@@ -3,32 +3,32 @@ const connection = require('./data/db');
 
 const playlists = [
     {
-        id: 'PL4liHFF6vAIoxrk89iS2QlOIvkGK5ssc8',
+        playlistId: 'PL4liHFF6vAIoxrk89iS2QlOIvkGK5ssc8',
         series: 'dt',
-        length: 0,
+        length: 26,
         lastUpdated: new Date().toLocaleString("en-US", { timeZone: "America/New_York" })
     },
     {
-        id: 'PL4liHFF6vAIozZwxJcgMTyviqET3YrRGc',
+        playlistId: 'PL4liHFF6vAIozZwxJcgMTyviqET3YrRGc',
         series: 'dme',
-        length: 0,
+        length: 15,
         lastUpdated: new Date().toLocaleString("en-US", { timeZone: "America/New_York" })
     },
     {
-        id: 'PL4liHFF6vAIpw4UNKcb-0N4R3IaPomzOw',
+        playlistId: 'PL4liHFF6vAIpw4UNKcb-0N4R3IaPomzOw',
         series: 'cin',
-        length: 0,
+        length: 12,
         lastUpdated: new Date().toLocaleString("en-US", { timeZone: "America/New_York" })
     },
     {
-        id: 'PL4liHFF6vAIrBICjb4vUpOBA2bSQPtkcK',
+        playlistId: 'PL4liHFF6vAIrBICjb4vUpOBA2bSQPtkcK',
         series: 'heb',
-        length: 0,
+        length: 5,
         lastUpdated: new Date().toLocaleString("en-US", { timeZone: "America/New_York" })
     }
 ];
 
-playlistModel.insertMany(list)
+playlistModel.insertMany(playlists)
     .then(result => {
         console.log(result);
     })
