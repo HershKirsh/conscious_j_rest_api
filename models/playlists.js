@@ -10,12 +10,8 @@ var PlaylistsSchema = new Schema({
         type: String,
         required: true,
     },
-    length: {
+    indexLength: {
         type: Number,
-        required: true
-    },
-    lastUpdated: {
-        type: Date,
         required: true
     }
 })
