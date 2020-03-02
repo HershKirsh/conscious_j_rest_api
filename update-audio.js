@@ -83,14 +83,14 @@ let getPlaylists = (playlists) => new Promise((resolve, reject) => {
         });
         getAudio(finalList);
         addToDb(finalList);
-        updatePlaylists();
     }
 }).catch((error) => {
     console.log(error + ' - catch error')
 });
-
+let addedToDb = false;
 let fileName = '';
 function getAudio(list) {
+    let i = 0;
     console.log('entered getAudio')
     list.forEach(item => {
         fileName = `audio/${item.title}.mp3`;
@@ -109,6 +109,10 @@ function getAudio(list) {
             });
             res.on('end', function () {
                 process.stdout.write('\n');
+                i++;
+                if (i === list.length && addedToDb) {
+                    updatePlaylists();
+                }
             });
         });
     });
@@ -135,6 +139,7 @@ function addToDb(list) {
     console.log('entered addToDb')
     recordingModel.insertMany(list)
         .then(result => {
+            addedToDb = true;
             console.log(result);
         })
         .catch(err => {
