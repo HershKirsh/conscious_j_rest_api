@@ -20,6 +20,9 @@ router.post('/', function (req, res, next) {
     .then(result => {
       addedToDb = true;
       console.log(result);
+      res.status(200).json({
+        message: 'list added'
+      });
     })
     .catch(err => {
       console.log(err);
@@ -30,7 +33,7 @@ router.post('/', function (req, res, next) {
 });
 
 router.get('/', function (req, res) {
-  psotModel.find({}, function (err, data) {
+  postModel.find({}, function (err, data) {
     if (err) {
       console.log(err);
       return res.status(401);
