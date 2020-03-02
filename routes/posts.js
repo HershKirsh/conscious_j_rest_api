@@ -10,8 +10,6 @@ router.post('/', function (req, res, next) {
   req.body.list.forEach(post => {
     let newPost = new postModel({
       name: post.name,
-      instaLink: null,
-      tags: []
     });
     list.push(newPost)
   });
