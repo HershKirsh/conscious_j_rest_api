@@ -8,15 +8,15 @@ const connection = require('../data/db');
 router.post('/', function (req, res, next) {
   let list = [];
   req.body.list.forEach(post => {
-    let newPost = {
+    let newPost = new postModel({
       name: post.name,
       instaLink: null,
       tags: []
-    };
+    });
     list.push(newPost)
   });
-  console.log(`there are ${list.length} posts ready`);
-  recordingModel.insertMany(list)
+  console.log(`there are ${list.length} posts`);
+  postModel.insertMany(list)
     .then(result => {
       addedToDb = true;
       console.log(result);
