@@ -15,7 +15,7 @@ router.post('/', function (req, res, next) {
     });
     list.push(newPost)
   });
-  console.log(list);
+  console.log(`there are ${list.length} posts ready`);
   recordingModel.insertMany(list)
     .then(result => {
       addedToDb = true;
@@ -24,8 +24,7 @@ router.post('/', function (req, res, next) {
     .catch(err => {
       console.log(err);
       res.status(500).json({
-        message: 'there was an error when adding user',
-        error: err
+        message: 'there was an error when adding user'
       });
     })
 });
