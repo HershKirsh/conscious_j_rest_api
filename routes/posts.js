@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const postModel = require('../models/posts');
+const postTagsModel = require('../models/postTags');
 const connection = require('../data/db');
-
 
 
 router.post('/', function (req, res, next) {
@@ -34,6 +34,17 @@ router.post('/', function (req, res, next) {
 
 router.get('/', function (req, res) {
   postModel.find({}, function (err, data) {
+    if (err) {
+      console.log(err);
+      return res.status(401);
+    }
+    var docs = JSON.stringify(data);
+    res.send(docs);
+  });
+});
+
+router.get('/tags', function (req, res) {
+  postTagsModel.find({}, function (err, data) {
     if (err) {
       console.log(err);
       return res.status(401);
