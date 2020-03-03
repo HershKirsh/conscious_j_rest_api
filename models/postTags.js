@@ -7,4 +7,4 @@ var PostTagsSchema = new Schema({
     }
 })
 
-module.exports = mongoose.model('postTags', PostTagsSchema);
+module.exports = mongoose.model('post-tags', PostTagsSchema);
