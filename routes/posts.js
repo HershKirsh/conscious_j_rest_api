@@ -49,8 +49,8 @@ router.get('/tags', function (req, res) {
       console.log(err);
       return res.status(401);
     }
-    var docs = JSON.stringify(data);
-    res.send(docs[0].tags);
+    var docs = JSON.stringify(data[0].tags);
+    res.send(docs);
   });
 });
 
