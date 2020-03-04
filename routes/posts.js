@@ -50,7 +50,20 @@ router.get('/tags', function (req, res) {
       return res.status(401);
     }
     var docs = JSON.stringify(data);
-    res.send(docs);
+    res.send(docs[0].tags);
+  });
+});
+
+router.patch('/tags', function (req, res) {
+  postTagsModel.findOneAndUpdate({ id: 1 }, { tags: req.body.tags }, function (err, data) {
+    if (err) {
+      console.log(err);
+      return res.status(401);
+    } else {
+      res.status(200).json({
+        message: 'tags updated'
+      });
+    }
   });
 });
 
