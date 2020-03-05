@@ -43,6 +43,17 @@ router.get('/', function (req, res) {
   });
 });
 
+router.patch('/', function (req, res) {
+  postModel.updateMany({req}, function (err, data) {
+    if (err) {
+      console.log(err);
+      return res.status(401);
+    }
+    var docs = JSON.stringify(data);
+    res.send(docs);
+  });
+});
+
 router.get('/tags', function (req, res) {
   postTagsModel.find({}, function (err, data) {
     if (err) {
@@ -55,7 +66,7 @@ router.get('/tags', function (req, res) {
 });
 
 router.patch('/tags', function (req, res) {
-  postTagsModel.findOneAndUpdate({ id: 1 }, { tags: req.body.tags }, function (err, data) {
+  postTagsModel.findOneAndUpdate({ id: 1 }, { tags: req.body }, function (err, data) {
     if (err) {
       console.log(err);
       return res.status(401);
