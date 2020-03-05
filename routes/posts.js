@@ -44,7 +44,7 @@ router.get('/', function (req, res) {
 });
 
 router.patch('/', function (req, res) {
-  postModel.updateMany({req}, function (err, data) {
+  postModel.updateMany({name: req.body[i].name}, {tags: req.body[i].tags}, function (err, data) {
     if (err) {
       console.log(err);
       return res.status(401);
@@ -66,6 +66,7 @@ router.get('/tags', function (req, res) {
 });
 
 router.patch('/tags', function (req, res) {
+  console.log(req.body);
   postTagsModel.findOneAndUpdate({ id: 1 }, { tags: req.body }, function (err, data) {
     if (err) {
       console.log(err);
