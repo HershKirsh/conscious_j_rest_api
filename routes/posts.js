@@ -60,7 +60,7 @@ router.patch('/', function (req, res) {
       } else {
         console.log(doc);
         res.status(200).json({
-          message = "Post tags were updated successfully"
+          message: "Post tags were updated successfully"
         })
       }
     })
