@@ -33,37 +33,50 @@ router.post('/', function (req, res, next) {
 });
 
 router.get('/', function (req, res) {
-  postModel.find({}, function (err, data) {
-    if (err) {
-      console.log(err);
-      return res.status(401);
-    }
-    var docs = JSON.stringify(data);
-    res.send(docs);
-  });
-});
-
-router.patch('/', function (req, res) {
-  postModel.updateMany({name: req.body[i].name}, {tags: req.body[i].tags}, function (err, data) {
-    if (err) {
-      console.log(err);
-      return res.status(401);
-    }
-    var docs = JSON.stringify(data);
-    res.send(docs);
-  });
-});
-
-router.get('/tags', function (req, res) {
+  var reply = {};
   postTagsModel.find({}, function (err, data) {
     if (err) {
       console.log(err);
       return res.status(401);
     }
-    var docs = JSON.stringify(data[0].tags);
-    res.send(docs);
+    reply.tags = data[0].tags;
+  })
+  postModel.find({}, function (err, data) {
+    if (err) {
+      console.log(err);
+      return res.status(401);
+    }
+    reply.posts = data;
   });
+  const replyJson = JSON.stringify(reply)
+  res.send(replyJson);
 });
+
+router.patch('/', function (req, res) {
+  req.body.forEach(post => {
+    postModel.findOneAndUpdate({ name: post.name }, { tags: post.tags }, { upsert: true, new: true }, function (err, doc) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(doc);
+        res.status(200).json({
+          message = "Post tags were updated successfully"
+        })
+      }
+    })
+  })
+});
+
+// router.get('/tags', function (req, res) {
+//   postTagsModel.find({}, function (err, data) {
+//     if (err) {
+//       console.log(err);
+//       return res.status(401);
+//     }
+//     var docs = JSON.stringify(data[0].tags);
+//     res.send(docs);
+//   });
+// });
 
 router.patch('/tags', function (req, res) {
   console.log(req.body);
