@@ -27,21 +27,21 @@ router.post('/', function (req, res, next) {
     .catch(err => {
       console.log(err);
       res.status(500).json({
-        message: 'there was an error when adding user'
+        message: 'there was an error when adding posts'
       });
     })
 });
 
 router.get('/', function (req, res) {
   var reply = {};
-  postTagsModel.find({}, function (err, data) {
+  await postTagsModel.find({}, function (err, data) {
     if (err) {
       console.log(err);
       return res.status(401);
     }
     reply.tags = data[0].tags;
   })
-  postModel.find({}, function (err, data) {
+  await postModel.find({}, function (err, data) {
     if (err) {
       console.log(err);
       return res.status(401);
