@@ -34,23 +34,49 @@ router.post('/', function (req, res, next) {
 
 router.get('/', function (req, res) {
   var reply = {};
-  await postTagsModel.find({}, function (err, data) {
-    if (err) {
-      console.log(err);
-      return res.status(401);
-    }
-    reply.tags = data[0].tags;
-  })
-  await postModel.find({}, function (err, data) {
-    if (err) {
-      console.log(err);
-      return res.status(401);
-    }
-    reply.posts = data;
-  });
+  reply.tags = await getTags();
+  reply.posts = await getPosts();
+  // postTagsModel.find({}, function (err, data) {
+  //   if (err) {
+  //     console.log(err);
+  //     return res.status(401);
+  //   }
+  //   reply.tags = data[0].tags;
+  // })
+  // postModel.find({}, function (err, data) {
+  //   if (err) {
+  //     console.log(err);
+  //     return res.status(401);
+  //   }
+  //   reply.posts = data;
+  // });
   const replyJson = JSON.stringify(reply)
   res.send(replyJson);
 });
+
+function getTags() {
+  return new Promise(resolve => {
+    postTagsModel.find({}, function (err, data) {
+      if (err) {
+        console.log(err);
+        resolve(err);
+      }
+      resolve(data[0].tags);
+    })
+  })
+}
+
+function getTags() {
+  return new Promise(resolve => {
+    postModel.find({}, function (err, data) {
+      if (err) {
+        console.log(err);
+        resolve(err);
+      }
+      resolve(data);
+    });
+  })
+}
 
 router.patch('/', function (req, res) {
   req.body.forEach(post => {
