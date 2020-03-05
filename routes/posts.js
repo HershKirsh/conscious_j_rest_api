@@ -27,56 +27,21 @@ router.post('/', function (req, res, next) {
     .catch(err => {
       console.log(err);
       res.status(500).json({
-        message: 'there was an error when adding posts'
+        message: 'there was an error when adding user'
       });
     })
 });
 
 router.get('/', function (req, res) {
-  var reply = {};
-  reply.tags = await getTags();
-  reply.posts = await getPosts();
-  // postTagsModel.find({}, function (err, data) {
-  //   if (err) {
-  //     console.log(err);
-  //     return res.status(401);
-  //   }
-  //   reply.tags = data[0].tags;
-  // })
-  // postModel.find({}, function (err, data) {
-  //   if (err) {
-  //     console.log(err);
-  //     return res.status(401);
-  //   }
-  //   reply.posts = data;
-  // });
-  const replyJson = JSON.stringify(reply)
-  res.send(replyJson);
+  postModel.find({}, function (err, data) {
+    if (err) {
+      console.log(err);
+      return res.status(401);
+    }
+    var docs = JSON.stringify(data);
+    res.send(docs);
+  });
 });
-
-function getTags() {
-  return new Promise(resolve => {
-    postTagsModel.find({}, function (err, data) {
-      if (err) {
-        console.log(err);
-        resolve(err);
-      }
-      resolve(data[0].tags);
-    })
-  })
-}
-
-function getTags() {
-  return new Promise(resolve => {
-    postModel.find({}, function (err, data) {
-      if (err) {
-        console.log(err);
-        resolve(err);
-      }
-      resolve(data);
-    });
-  })
-}
 
 router.patch('/', function (req, res) {
   req.body.forEach(post => {
@@ -93,16 +58,16 @@ router.patch('/', function (req, res) {
   })
 });
 
-// router.get('/tags', function (req, res) {
-//   postTagsModel.find({}, function (err, data) {
-//     if (err) {
-//       console.log(err);
-//       return res.status(401);
-//     }
-//     var docs = JSON.stringify(data[0].tags);
-//     res.send(docs);
-//   });
-// });
+router.get('/tags', function (req, res) {
+  postTagsModel.find({}, function (err, data) {
+    if (err) {
+      console.log(err);
+      return res.status(401);
+    }
+    var docs = JSON.stringify(data[0].tags);
+    res.send(docs);
+  });
+});
 
 router.patch('/tags', function (req, res) {
   console.log(req.body);
