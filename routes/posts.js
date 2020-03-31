@@ -44,6 +44,7 @@ router.get('/', function (req, res) {
 });
 
 router.patch('/', function (req, res) {
+  console.log(req.body);
   req.body.forEach(post => {
     postModel.findOneAndUpdate({ name: post.name }, { tags: post.tags }, { upsert: true, new: true }, function (err, doc) {
       if (err) {

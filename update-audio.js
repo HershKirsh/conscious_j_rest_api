@@ -45,7 +45,7 @@ let getPlaylists = (playlists) => new Promise((resolve, reject) => {
                         let x = playlist.indexLength + 1;
                         let newIndexLength = playlist.indexLength + 1;
                         do {
-                            if (dataArray.items[x].snippet.title.split(/(: ?)/).pop() !== '') {
+                            if (dataArray.items[x].snippet.title != "Deleted video" && dataArray.items[x].snippet.title.split(/(: ?)/).pop() !== '') {
                                 newIndexLength++;
                             } else { break }
                             x++;
@@ -55,9 +55,9 @@ let getPlaylists = (playlists) => new Promise((resolve, reject) => {
                         playlist.indexLength = newIndexLength;
                     }
                 }
-                if (i === playlists.length) {
+                if (i === playlists.length || i === 10) {
                     console.log('resolved');
-                    console.log(newList)
+                    console.log(newList);
                     resolve(newList);
                 }
             })
@@ -87,6 +87,7 @@ let getPlaylists = (playlists) => new Promise((resolve, reject) => {
 }).catch((error) => {
     console.log(error + ' - catch error')
 });
+
 let addedToDb = false;
 let fileName = '';
 function getAudio(list) {
