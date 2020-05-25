@@ -8,14 +8,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "async-await-foreach": "^1.0.4",
     "aws-sdk": "^2.596.0",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "ejs": "^2.7.1",
-    "es6-promise": "^4.2.8",
     "express": "^4.17.1",
     "ffmpeg": "0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
     "isomorphic-fetch": "^2.2.1",
     "m3u8stream": "^0.6.3",
     "mongoose": "^5.7.12",
@@ -23,8 +22,7 @@
     "multer": "^1.4.2",
     "p-each-series": "^2.1.0",
     "parse-time": "^0.1.4",
-    "youtube-mp3-downloader": "^0.6.3",
-    "ytdl-core": "^1.0.6"
+    "ytdl-core": "^2.1.2"
   },
   "engines": {
     "node": "10.15.3",

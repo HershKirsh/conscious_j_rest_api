@@ -1,5 +1,6 @@
 const fs = require('fs');
 const stream = require('stream');
+const ffmpeg = require('fluent-ffmpeg');
 const https = require('https');
 const ytdl = require('ytdl-core')
 const playlistModel = require('./models/playlists');
@@ -40,22 +41,26 @@ let getPlaylists = (playlists) => new Promise((resolve, reject) => {
             res.on('end', () => {
                 let dataArray = JSON.parse(data);
                 i++;
+                // check if there are new items
                 if (playlist.indexLength < dataArray.items.length) {
-                    if (dataArray.items[playlist.indexLength].snippet.title.split(/(: ?)/).pop() !== '') {
+                    // check if at least the first new item has a proper title
+                    if (dataArray.items[playlist.indexLength].snippet.title.includes(':') && dataArray.items[playlist.indexLength].snippet.title.split(/(: ?)/).pop() !== '') {
                         let x = playlist.indexLength + 1;
                         let newIndexLength = playlist.indexLength + 1;
+                        // while there are new items identify index of last item with proper title
                         do {
-                            if (dataArray.items[x].snippet.title != "Deleted video" && dataArray.items[x].snippet.title.split(/(: ?)/).pop() !== '') {
+                            if (dataArray.items[x].snippet.title != "Deleted video" && dataArray.items[x].snippet.title.includes(':') && dataArray.items[x].snippet.title.split(/(: ?)/).pop() !== '') {
                                 newIndexLength++;
                             } else { break }
                             x++;
                         } while (x < dataArray.items.length);
+                        // after above index is identified, add up to this index to array of new items
                         const subArray = dataArray.items.slice(playlist.indexLength, newIndexLength)
                         newList.push.apply(newList, subArray);
                         playlist.indexLength = newIndexLength;
                     }
                 }
-                if (i === playlists.length || i === 10) {
+                if (i === playlists.length) {
                     console.log('resolved');
                     console.log(newList);
                     resolve(newList);
@@ -82,7 +87,7 @@ let getPlaylists = (playlists) => new Promise((resolve, reject) => {
             } else { console.log('original: ' + item.snippet.title + ', modified: ' + modifiedTitle) }
         });
         getAudio(finalList);
-        addToDb(finalList);
+       addToDb(finalList);
     }
 }).catch((error) => {
     console.log(error + ' - catch error')
@@ -90,14 +95,41 @@ let getPlaylists = (playlists) => new Promise((resolve, reject) => {
 
 let addedToDb = false;
 let fileName = '';
-function getAudio(list) {
+
+function uploadFromStream(s3) {
+    var pass = new stream.PassThrough();
+    const params = {
+        ACL: "public-read",
+        Bucket: "consciousj",
+        Key: fileName,
+        Body: pass,
+        ContentDisposition: "attachment",
+        ContentType: "audio/mp3"
+    };
+    const manager = s3.upload(params);
+    manager.on('httpUploadProgress', (progress) => {
+        console.log('progress', progress);
+    });
+    s3.upload(params, function (s3Err, data) {
+        if (s3Err) throw s3Err
+        console.log(`File uploaded successfully at ${data.Location}`)
+    });
+    return pass
+    // return {
+    //     writeStream: pass,
+    //     promise: s3.upload(params).promise(),
+    // };
+};
+
+const getAudio = (list) => {
     let i = 0;
-    console.log('entered getAudio')
-    list.forEach(item => {
+    for (const item of list) {
         fileName = `audio/${item.title}.mp3`;
         const url = 'https://www.youtube.com/watch?v=' + item.ytId;
-        var audio = ytdl(url, { quality: 'highestaudio', filter: 'audioonly' });
-        audio.pipe(uploadFromStream(s3));
+        const audio = ytdl(url);
+        ffmpeg().input(audio).format('mp3').pipe(uploadFromStream(s3))
+        //uploadFromStream(s3).promise.then(console.log('resolved'));
+        // const audioResult = audio.pipe(uploadFromStream(s3).pass);
         audio.on('response', function (res) {
             var totalSize = res.headers['content-length'];
             var dataRead = 0;
@@ -116,25 +148,9 @@ function getAudio(list) {
                 }
             });
         });
-    });
-}
-
-function uploadFromStream(s3) {
-    var pass = new stream.PassThrough();
-    const params = {
-        ACL: "public-read",
-        Bucket: "consciousj",
-        Key: fileName,
-        Body: pass,
-        ContentDisposition: "attachment",
-        ContentType: "audio/mp3"
     };
-    s3.upload(params, function (s3Err, data) {
-        if (s3Err) throw s3Err
-        console.log(`File uploaded successfully at ${data.Location}`)
-    });
-    return pass;
-}
+};
+
 
 function addToDb(list) {
     console.log('entered addToDb')
