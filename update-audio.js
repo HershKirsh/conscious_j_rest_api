@@ -47,7 +47,7 @@ let getPlaylists = (playlists) => new Promise((resolve, reject) => {
                     if (dataArray.items[playlist.indexLength].snippet.title.includes(':') && dataArray.items[playlist.indexLength].snippet.title.split(/(: ?)/).pop() !== '') {
                         let x = playlist.indexLength + 1;
                         let newIndexLength = playlist.indexLength + 1;
-                        // while there are new items identify index of last item with proper title
+                        // while there are new items, identify index of last item with proper title
                         do {
                             if (dataArray.items[x].snippet.title != "Deleted video" && dataArray.items[x].snippet.title.includes(':') && dataArray.items[x].snippet.title.split(/(: ?)/).pop() !== '') {
                                 newIndexLength++;

@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
+const playlistRouter = require('./routes/playlests');
 const recordingRouter = require('./routes/recordings');
 const postRouter = require('./routes/posts');
 
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/recording', recordingRouter);
+app.use('/playlist', playlistRouter);
 app.use('/posts', postRouter);
 
 // catch 404 and forward to error handler

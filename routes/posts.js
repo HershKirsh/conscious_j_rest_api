@@ -5,7 +5,7 @@ const postTagsModel = require('../models/postTags');
 const connection = require('../data/db');
 
 
-router.post('/', function (req, res, next) {
+router.post('/', function (req, res) {
   let list = [];
   req.body.list.forEach(post => {
     let newPost = new postModel({
