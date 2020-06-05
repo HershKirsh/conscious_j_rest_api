@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const playlistModel = require('../models/playlist');
+const playlistModel = require('../models/playlists');
 const connection = require('../data/db');
 //const spawn = require('child_process').spawn;
 const multer = require('multer');
