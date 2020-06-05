@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
-const playlistRouter = require('./routes/playlests');
+const playlistRouter = require('./routes/playlists');
 const recordingRouter = require('./routes/recordings');
 const postRouter = require('./routes/posts');
 
