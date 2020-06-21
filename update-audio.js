@@ -39,26 +39,31 @@ let getPlaylists = (playlists) => new Promise((resolve, reject) => {
                 data += d;
             })
             res.on('end', () => {
+                let subArray = [];
                 let dataArray = JSON.parse(data);
+                //remove items from array if the title is 'Deleted video'
+                dataArray.items = dataArray.items.filter(item => item.snippet.title !== "Deleted video")
                 i++;
                 // check if there are new items
                 if (playlist.indexLength < dataArray.items.length) {
-                    // check if at least the first new item has a proper title
-                    if (dataArray.items[playlist.indexLength].snippet.title.includes(':') && dataArray.items[playlist.indexLength].snippet.title.split(/(: ?)/).pop() !== '') {
+                    // check if at least the first new item has a proper title (if skipTitleCheck is not = true)
+                    if (!playlist.skipTitleCheck && dataArray.items[playlist.indexLength].snippet.title.includes(':') && dataArray.items[playlist.indexLength].snippet.title.split(/(: ?)/).pop() !== '') {
                         let x = playlist.indexLength + 1;
                         let newIndexLength = playlist.indexLength + 1;
                         // while there are new items, identify index of last item with proper title
                         do {
-                            if (dataArray.items[x].snippet.title != "Deleted video" && dataArray.items[x].snippet.title.includes(':') && dataArray.items[x].snippet.title.split(/(: ?)/).pop() !== '') {
+                            if (dataArray.items[x].snippet.title.includes(':') && dataArray.items[x].snippet.title.split(/(: ?)/).pop() !== '') {
                                 newIndexLength++;
                             } else { break }
                             x++;
                         } while (x < dataArray.items.length);
-                        // after above index is identified, add up to this index to array of new items
-                        const subArray = dataArray.items.slice(playlist.indexLength, newIndexLength)
-                        newList.push.apply(newList, subArray);
+                        // after above index is identified, add upto this index to array of new items
+                        subArray = dataArray.items.slice(playlist.indexLength, newIndexLength)
                         playlist.indexLength = newIndexLength;
+                    } else if (playlist.skipTitleCheck) {
+                        subArray = dataArray.items.slice(playlist.indexLength, dataArray.items.length)
                     }
+                    newList.push.apply(newList, subArray);
                 }
                 if (i === playlists.length) {
                     console.log('resolved');
@@ -87,7 +92,6 @@ let getPlaylists = (playlists) => new Promise((resolve, reject) => {
             } else { console.log('original: ' + item.snippet.title + ', modified: ' + modifiedTitle) }
         });
         getAudio(finalList);
-       addToDb(finalList);
     }
 }).catch((error) => {
     console.log(error + ' - catch error')
@@ -112,24 +116,17 @@ function uploadFromStream(s3) {
     });
     s3.upload(params, function (s3Err, data) {
         if (s3Err) throw s3Err
-        console.log(`File uploaded successfully at ${data.Location}`)
+        console.log(`File uploaded successfully at ${data.Location}`);
     });
     return pass
-    // return {
-    //     writeStream: pass,
-    //     promise: s3.upload(params).promise(),
-    // };
 };
 
 const getAudio = (list) => {
-    let i = 0;
     for (const item of list) {
         fileName = `audio/${item.title}.mp3`;
         const url = 'https://www.youtube.com/watch?v=' + item.ytId;
         const audio = ytdl(url);
         ffmpeg().input(audio).format('mp3').pipe(uploadFromStream(s3))
-        //uploadFromStream(s3).promise.then(console.log('resolved'));
-        // const audioResult = audio.pipe(uploadFromStream(s3).pass);
         audio.on('response', function (res) {
             var totalSize = res.headers['content-length'];
             var dataRead = 0;
@@ -142,37 +139,33 @@ const getAudio = (list) => {
             });
             res.on('end', function () {
                 process.stdout.write('\n');
-                i++;
-                if (i === list.length && addedToDb) {
-                    updatePlaylists();
-                }
+                addToDb(item)
             });
         });
     };
 };
 
 
-function addToDb(list) {
-    console.log('entered addToDb')
-    recordingModel.insertMany(list)
+function addToDb(item) {
+    const newRecording = new recordingModel(item)
+    newRecording
+        .save()
         .then(result => {
-            addedToDb = true;
             console.log(result);
+            updatePlaylists(item)
         })
         .catch(err => {
             console.log(err);
         });
 }
 
-const updatePlaylists = () => {
+const updatePlaylists = (item) => {
     console.log('entered updatePlaylists')
-    playlists.forEach(item => {
-        playlistModel.findOneAndUpdate({ playlistId: item.playlistId }, { indexLength: item.indexLength }, { upsert: true, new: true }, function (err, doc) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log(doc);
-            }
-        })
+    playlistModel.findOneAndUpdate({ series: item.series }, { $inc: { indexLength: 1 } }, { upsert: true, new: true }, function (err, doc) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(doc);
+        }
     })
 }

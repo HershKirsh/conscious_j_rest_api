@@ -25,6 +25,10 @@ var PlaylistsSchema = new Schema({
     indexLength: {
         type: Number,
         required: true
+    },
+    skipTitleCheck: {
+        type: Boolean,
+        required: false
     }
 })
 
