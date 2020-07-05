@@ -7,6 +7,7 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const playlistRouter = require('./routes/playlists');
 const recordingRouter = require('./routes/recordings');
+const meditationRouter = require('./routes/meditations');
 const postRouter = require('./routes/posts');
 
 const app = express();
@@ -35,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/recording', recordingRouter);
+app.use('/meditations', recordingRouter);
 app.use('/playlist', playlistRouter);
 app.use('/posts', postRouter);
 

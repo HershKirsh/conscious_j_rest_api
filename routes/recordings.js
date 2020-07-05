@@ -9,7 +9,6 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: 'us-east-2'
 });
-//const spawn = require('child_process').spawn;
 const multer = require('multer');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
