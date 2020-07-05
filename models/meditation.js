@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-var MeditatioSchema = new Schema({
+var MeditationSchema = new Schema({
     title: {
         type: String,
         required: true,
@@ -28,4 +28,4 @@ var MeditatioSchema = new Schema({
     }
 })
 
-module.exports = mongoose.model('meditatios', MeditatioSchema);
+module.exports = mongoose.model('meditations', MeditationSchema);

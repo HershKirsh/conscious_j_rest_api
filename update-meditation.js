@@ -3,7 +3,7 @@ const stream = require('stream');
 const ffmpeg = require('fluent-ffmpeg');
 const https = require('https');
 const ytdl = require('ytdl-core')
-const playlistModel = require('./models/playlists');
+const meditationPlaylistModel = require('./models/meditation_playlist');
 const meditationModel = require('./models/meditation');
 const connection = require('./data/db');
 const AWS = require('aws-sdk');
@@ -14,13 +14,12 @@ const s3 = new AWS.S3({
 
 let playlists = [];
 
-playlistModel.findOne({ series: 'med' }, function (err, data) {
+meditationPlaylistModel.find({}, function (err, data) {
     if (err) {
         console.log(err);
     }
-    console.log(data)
     playlists = data;
-    getPlaylists(playlists)
+    getPlaylists(playlists[0])
 });
 
 
@@ -153,7 +152,7 @@ function addToDb(item) {
 
 const updatePlaylists = (item) => {
     console.log('entered updatePlaylists')
-    playlistModel.findOneAndUpdate({ series: 'med' }, { $inc: { indexLength: 1 } }, { upsert: true, new: true }, function (err, doc) {
+    meditationPlaylistModel.findOneAndUpdate({ series: 'med' }, { $inc: { indexLength: 1 } }, { upsert: true, new: true }, function (err, doc) {
         if (err) {
             console.log(err);
         } else {
