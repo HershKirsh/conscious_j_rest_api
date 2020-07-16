@@ -36,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/recording', recordingRouter);
-app.use('/meditations', recordingRouter);
+app.use('/meditations', meditationRouter);
 app.use('/playlist', playlistRouter);
 app.use('/posts', postRouter);
 
