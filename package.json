@@ -22,7 +22,7 @@
     "multer": "^1.4.2",
     "p-each-series": "^2.1.0",
     "parse-time": "^0.1.4",
-    "ytdl-core": "^2.1.2"
+    "ytdl-core": "^2.1.7"
   },
   "engines": {
     "node": "10.15.3",
